@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private Rigidbody2D rigidbody;
+    private Rigidbody2D rb;
 
     public float speed;
     private float inputX;
@@ -14,24 +14,43 @@ public class Player : MonoBehaviour
     private Animator[] animators;
     private bool isMoving;
 
-    private Transform transform;
+    private Transform tf;
+    [SerializeField]private bool isInputDisable;
+
+    private void OnEnable()
+    {
+        EventHandler.BeforeSceneUnloadedEvent += OnBeforeSceneUnloadedEvent;
+        EventHandler.AfterSceneLoadedEvent += OnAfterSceneLoadedEvent;
+        EventHandler.MoveToPositionEvent += OnMoveToPositionEvent;
+    }
+
+    private void OnDisable()
+    {
+        EventHandler.BeforeSceneUnloadedEvent -= OnBeforeSceneUnloadedEvent;
+        EventHandler.AfterSceneLoadedEvent -= OnAfterSceneLoadedEvent;
+        EventHandler.MoveToPositionEvent -= OnMoveToPositionEvent;
+    }
 
     private void Awake()
     {
-        rigidbody = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
         animators = GetComponentsInChildren<Animator>();
-        transform = GetComponent<Transform>();
+        tf = GetComponent<Transform>();
     }
 
     private void Update()
     {
-        PlayerInput();
+        if (isInputDisable == false)
+            PlayerInput();
+        else
+            isMoving = false;
         SwitchAnimation();
     }
 
     private void FixedUpdate()
     {
-        Movement();
+        if (isInputDisable == false)
+            Movement();
     }
 
     private void PlayerInput()
@@ -59,7 +78,7 @@ public class Player : MonoBehaviour
 
     private void Movement()
     {
-        rigidbody.MovePosition(rigidbody.position + speed * Time.deltaTime * movementInput);
+        rb.MovePosition(rb.position + speed * Time.deltaTime * movementInput);
 
     }
 
@@ -74,5 +93,19 @@ public class Player : MonoBehaviour
                 animator.SetFloat("InputY", inputY);
             }
         }
+    }
+
+    private void OnMoveToPositionEvent(Vector3 targetPos)
+    {
+        transform.position = targetPos;
+    }
+
+    private void OnBeforeSceneUnloadedEvent()
+    {
+        isInputDisable = true;
+    }
+    private void OnAfterSceneLoadedEvent()
+    {
+        isInputDisable= false;
     }
 }

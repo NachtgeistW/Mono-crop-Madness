@@ -37,10 +37,16 @@ public static class EventHandler
         ItemSelectEvent?.Invoke(itemDetail, isSelected);
     }
 
-    public static event Action BeforeSceneLoadedEvent;
-    public static void CallBeforeSceneLoadedEvent()
+    public static event Action<string, Vector3> TransitionEvent;
+    public static void CallTransitionEvent(string sceneName, Vector3 pos)
     {
-        BeforeSceneLoadedEvent?.Invoke();
+        TransitionEvent?.Invoke(sceneName, pos);
+    }
+
+    public static event Action BeforeSceneUnloadedEvent;
+    public static void CallBeforeSceneUnloadedEvent()
+    {
+        BeforeSceneUnloadedEvent?.Invoke();
     }
 
     public static event Action AfterSceneLoadedEvent;
@@ -48,4 +54,8 @@ public static class EventHandler
     {
         AfterSceneLoadedEvent?.Invoke();
     }
+
+    public static event Action<Vector3> MoveToPositionEvent;
+    public static void CallMoveToPositionEvent(Vector3 pos) => MoveToPositionEvent?.Invoke(pos);
+
 }

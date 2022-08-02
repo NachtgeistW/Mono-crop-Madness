@@ -5,17 +5,14 @@ using Cinemachine;
 
 public class SwitchBounds : MonoBehaviour
 {
-    //TODO: ?????????
-    // Start is called before the first frame update
-    void Start()
+    private void OnEnable()
     {
-        SwitchConfinerShape();
+        EventHandler.AfterSceneLoadedEvent += SwitchConfinerShape;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDisable()
     {
-        
+        EventHandler.AfterSceneLoadedEvent -= SwitchConfinerShape;
     }
 
     private void SwitchConfinerShape()

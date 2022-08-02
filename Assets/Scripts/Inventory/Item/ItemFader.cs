@@ -19,7 +19,7 @@ public class ItemFader : MonoBehaviour
     public void FadeIn()
     {
         Color targetColor = new(1, 1, 1, 1);
-        spriteRenderer.DOColor(targetColor, Settings.fadeDuration);
+        spriteRenderer.DOColor(targetColor, Settings.itemFadeDuration);
     }
 
     /// <summary>
@@ -28,6 +28,6 @@ public class ItemFader : MonoBehaviour
     public void FadeOut()
     {
         Color targetColor = new(1, 1, 1, Settings.fadeAlpha);
-        spriteRenderer.DOColor(targetColor, Settings.fadeDuration);
+        spriteRenderer.DOColor(targetColor, Settings.itemFadeDuration);
     }
 }

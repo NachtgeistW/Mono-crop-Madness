@@ -7,3 +7,8 @@ public enum GridType
 {
     Plantable, NPCObstacle
 }
+
+public enum ParticaleEffectType
+{
+    None, FallingLeaves01, FallingLeaves02
+}

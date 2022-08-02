@@ -1,4 +1,4 @@
-using UnityEngine;
+ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
@@ -20,22 +20,22 @@ public class CursorManager : MonoBehaviour
     private void OnEnable()
     {
         EventHandler.ItemSelectEvent += OnItemSelectEvent;
-        EventHandler.BeforeSceneLoadedEvent += OnBeforeSceneLoadedEvent;
+        EventHandler.BeforeSceneUnloadedEvent += OnBeforeSceneLoadedEvent;
         EventHandler.AfterSceneLoadedEvent += OnAfterSceneLoadedEvent;
     }
 
     private void OnDisable()
     {
         EventHandler.ItemSelectEvent -= OnItemSelectEvent;
-        EventHandler.BeforeSceneLoadedEvent -= OnBeforeSceneLoadedEvent;
+        EventHandler.BeforeSceneUnloadedEvent -= OnBeforeSceneLoadedEvent;
         EventHandler.AfterSceneLoadedEvent -= OnAfterSceneLoadedEvent;
     }
 
     private void Start()
     {
-        curSprite = normal;
         cursorCanvas = GameObject.FindGameObjectWithTag("CursorCanvas").GetComponent<RectTransform>();
         cursorImage = cursorCanvas.GetChild(0).GetComponent<Image>();
+        curSprite = normal;
         SetCursorImage(normal);
 
         mainCamera = Camera.main;
@@ -46,7 +46,7 @@ public class CursorManager : MonoBehaviour
         if (cursorCanvas == null) return;
         cursorImage.transform.position = Input.mousePosition;
 
-        if (!IsCursorInteractWithUI())
+        if (isCursorEnable && !IsCursorInteractWithUI())
         {
             SetCursorImage(curSprite);
             CheckCursorValid();
@@ -59,11 +59,10 @@ public class CursorManager : MonoBehaviour
         isCursorEnable = false;
     }
 
-
     private void OnAfterSceneLoadedEvent()
     {
-        isCursorEnable= true;
         curGrid = FindObjectOfType<Grid>();
+        isCursorEnable= true;
     }
 
     private void SetCursorImage(Sprite sprite)
@@ -86,9 +85,9 @@ public class CursorManager : MonoBehaviour
 
     private void CheckCursorValid()
     {
-        curGrid = FindObjectOfType<Grid>();
         mouseWorldPos = mainCamera.ScreenToWorldPoint(
-            new Vector3(Input.mousePosition.x, Input.mousePosition.y, -mainCamera.transform.position.z));
+            new Vector3(Input.mousePosition.x, Input.mousePosition.y, -mainCamera.transform.position.z)
+        );
         mouseGridPos = curGrid.WorldToCell(mouseWorldPos);
 
         Debug.Log("WorldPos: " + mouseWorldPos + " GridPos: " + mouseGridPos);
