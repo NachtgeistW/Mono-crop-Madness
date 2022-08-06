@@ -357,7 +357,6 @@ GameObject:
   - component: {fileID: 155991384}
   - component: {fileID: 155991386}
   - component: {fileID: 155991387}
-  - component: {fileID: 155991388}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -466,18 +465,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 839c1fe8cd598324a9cc973945e8900b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &155991388
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 155991381}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 841c655115375fb48b36c96774d42d10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &334765017
@@ -1052,6 +1039,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapDataList:
   - {fileID: 11400000, guid: 3d5dba1a9f9f7174cab29e7761c865ca, type: 2}
+  plantTile: {fileID: 0}
 --- !u!1 &1244889639
 GameObject:
   m_ObjectHideFlags: 3
@@ -1216,6 +1204,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemPrefab: {fileID: 1837336911988944552, guid: 52fe069006c650b478a3b2cf3c49382a, type: 3}
+  bounceItemPrefab: {fileID: 6663040114302813009, guid: 6519d095f4575464f9ae6449f6dc7a91, type: 3}
 --- !u!1 &1521627347
 GameObject:
   m_ObjectHideFlags: 0

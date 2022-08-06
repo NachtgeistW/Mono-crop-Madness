@@ -22,6 +22,7 @@ public class Player : MonoBehaviour
         EventHandler.BeforeSceneUnloadedEvent += OnBeforeSceneUnloadedEvent;
         EventHandler.AfterSceneLoadedEvent += OnAfterSceneLoadedEvent;
         EventHandler.MoveToPositionEvent += OnMoveToPositionEvent;
+        EventHandler.MouseClickEvent += OnMouseClickEvent;
     }
 
     private void OnDisable()
@@ -29,6 +30,7 @@ public class Player : MonoBehaviour
         EventHandler.BeforeSceneUnloadedEvent -= OnBeforeSceneUnloadedEvent;
         EventHandler.AfterSceneLoadedEvent -= OnAfterSceneLoadedEvent;
         EventHandler.MoveToPositionEvent -= OnMoveToPositionEvent;
+        EventHandler.MouseClickEvent -= OnMouseClickEvent;
     }
 
     private void Awake()
@@ -108,4 +110,14 @@ public class Player : MonoBehaviour
     {
         isInputDisable= false;
     }
+
+    private void OnMouseClickEvent(Vector3 pos, ItemDetails itemDetails)
+    {
+        //TODO: Animation
+
+
+        EventHandler.CallExecuteActionAfterAnimation(pos, itemDetails);
+    }
+
+
 }

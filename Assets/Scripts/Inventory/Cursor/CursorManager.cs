@@ -1,6 +1,7 @@
- using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Map;
 
 public class CursorManager : MonoBehaviour
 {
@@ -16,6 +17,10 @@ public class CursorManager : MonoBehaviour
     private Vector3 mouseWorldPos;
     private Vector3Int mouseGridPos;
     private bool isCursorEnable;
+    private bool isCursorPositionValid;
+
+    private ItemDetails curItem;
+    private Transform playerTransform => GameObject.FindGameObjectWithTag("Player").transform;
 
     private void OnEnable()
     {
@@ -50,6 +55,7 @@ public class CursorManager : MonoBehaviour
         {
             SetCursorImage(curSprite);
             CheckCursorValid();
+            CheckPlayerInput();
         }
         else
             SetCursorImage(normal);
@@ -62,26 +68,64 @@ public class CursorManager : MonoBehaviour
     private void OnAfterSceneLoadedEvent()
     {
         curGrid = FindObjectOfType<Grid>();
-        isCursorEnable= true;
-    }
-
-    private void SetCursorImage(Sprite sprite)
-    {
-        cursorImage.sprite = sprite;
-        cursorImage.color = new Color(1, 1, 1, 1);
     }
 
     private void OnItemSelectEvent(ItemDetails itemDetail, bool isSelected)
     {
         if (!isSelected)
         {
+            curItem = null;
+            isCursorEnable = false;
             curSprite = normal;
         }
         else
         {
+            curItem = itemDetail;
             curSprite = plant;
+            isCursorEnable = true;
         }
     }
+
+    private void CheckPlayerInput()
+    {
+        //On pressing mouse left key down
+        if (Input.GetMouseButtonDown(0) && isCursorPositionValid)
+        {
+            EventHandler.CallMouseClickEvent(mouseWorldPos, curItem);
+        }
+    }
+
+    #region Set the style of cursor
+
+    /// <summary>
+    /// Set the image of cursor
+    /// </summary>
+    /// <param name="sprite">the image to be set</param>
+    private void SetCursorImage(Sprite sprite)
+    {
+        cursorImage.sprite = sprite;
+        cursorImage.color = Color.white;
+    }
+
+    /// <summary>
+    /// Set the image of cursor as valid
+    /// </summary>
+    private void SetCursorValid()
+    {
+        isCursorPositionValid = true;
+        cursorImage.color = Color.white;
+    }
+
+    /// <summary>
+    /// Set the image of cursor as invalid
+    /// </summary>
+    private void SetCursorInvalid()
+    {
+        isCursorPositionValid = false;
+        cursorImage.color = new Color(1, 0, 0, 0.4f);
+    }
+
+    #endregion
 
     private void CheckCursorValid()
     {
@@ -90,13 +134,43 @@ public class CursorManager : MonoBehaviour
         );
         mouseGridPos = curGrid.WorldToCell(mouseWorldPos);
 
-        Debug.Log("WorldPos: " + mouseWorldPos + " GridPos: " + mouseGridPos);
+        var playerGridPos = curGrid.WorldToCell(playerTransform.position);
+
+        //Judge usage
+        var itemUseRadius = curItem.itemUseRadius;
+        if (Mathf.Abs(mouseGridPos.x - playerGridPos.x) > itemUseRadius
+            || Mathf.Abs(mouseGridPos.y - playerGridPos.y) > itemUseRadius)
+        {
+            SetCursorInvalid();
+            return;
+        }
+
+        //Judge plantable
+        TileDetails curTile = GridMapManager.Instance.GetTileDetailsOnMousePosition(mouseGridPos);
+        if (curTile != null)
+        {
+            switch (curItem.itemType)
+            {
+                case ItemType.Grass:
+                case ItemType.Bush:
+                case ItemType.Tree:
+                    if(curTile.canPlant)    SetCursorValid();
+                    break;
+                default:
+                    SetCursorInvalid();
+                    break;
+            }
+        }
+        else
+        {
+            SetCursorInvalid();
+        }
     }
 
     private bool IsCursorInteractWithUI()
     {
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
-           return true;
+            return true;
         else
             return false;
     }

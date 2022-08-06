@@ -1,16 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Map
 {
-    public class GridMapManager : MonoBehaviour
+    public class GridMapManager : Singleton<GridMapManager>
     {
         [Header("Map Info")]
         public List<MapData_SO> mapDataList;
 
         //Scene name and coordinate
         private Dictionary<string, TileDetails> tileDetailsDict = new Dictionary<string, TileDetails>();
+
+        private Grid curGrid;
+
+        [Header("Plant Tilemaps")]
+        public RuleTile plantTile;
+
+        private void OnEnable()
+        {
+            EventHandler.ExecuteActionAfterAnimation += OnExecuteActionAfterAnimation;
+            EventHandler.AfterSceneLoadedEvent += OnAfterSceneLoadedEvent;
+        }
+
+        private void OnDisable()
+        {
+            EventHandler.ExecuteActionAfterAnimation -= OnExecuteActionAfterAnimation;
+            EventHandler.AfterSceneLoadedEvent += OnAfterSceneLoadedEvent;
+        }
 
         private void Start()
         {
@@ -30,7 +48,7 @@ namespace Map
                 };
                 
                 //Set the tile details data
-                string key = tileDetails.coord.ToString() + mapData.name;
+                string key = tileDetails.coord.ToString() + mapData.sceneName;
                 if (GetTileDetails(key) != null)
                 {
                     tileDetails = GetTileDetails(key);
@@ -63,5 +81,49 @@ namespace Map
             }
             else return null;
         }
+
+        /// <summary>
+        /// Return TileDetails by mouse position on grid
+        /// </summary>
+        /// <param name="mouseGridPos">mouse position on grid</param>
+        /// <returns></returns>
+        public TileDetails GetTileDetailsOnMousePosition(Vector3Int mouseGridPos)
+        {
+            string key = new Vector2Int(mouseGridPos.x, mouseGridPos.y).ToString() + SceneManager.GetActiveScene().name;
+            return GetTileDetails(key);
+        }
+
+        private void OnAfterSceneLoadedEvent()
+        {
+            curGrid = FindObjectOfType<Grid>();
+        }
+
+        /// <summary>
+        /// Execute the actual item function
+        /// </summary>
+        /// <param name="mouseWorldPos">mouse position</param>
+        /// <param name="itemDetails">item info</param>
+        private void OnExecuteActionAfterAnimation(Vector3 mouseWorldPos, ItemDetails itemDetails)
+        {
+            var mouseGridPos = curGrid.WorldToCell(mouseWorldPos);
+            var curTile = GetTileDetailsOnMousePosition(mouseGridPos);
+
+            if (curTile != null)
+            {
+                //TODO
+                switch (itemDetails.itemType)
+                {
+                    case ItemType.Grass:
+                    case ItemType.Bush:
+                    case ItemType.Tree:
+                        EventHandler.CallDropItemEvent(itemDetails.itemID, mouseWorldPos);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        
     }
 }

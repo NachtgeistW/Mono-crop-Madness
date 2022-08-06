@@ -82,7 +82,7 @@ public class TimeUI : MonoBehaviour
     private void SwitchDayAndNightImage(int hour)
     {
         const float fadeSpeed = 1f;
-        Debug.Log(hour);
+        //Debug.Log(hour);
         if (hour == 6)
         {
             nightImage.DOFade(0, fadeSpeed);

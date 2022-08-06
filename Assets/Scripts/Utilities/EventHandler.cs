@@ -8,7 +8,7 @@ public static class EventHandler
     //Register event action
     public static event Action<List<InventoryItem>> UpdateInventoryUI;
     //Call the action
-    public static void CallOnUpdateInventoryUI(List<InventoryItem> list)
+    public static void CallUpdateInventoryUI(List<InventoryItem> list)
     {
         UpdateInventoryUI?.Invoke(list);
     }
@@ -18,6 +18,9 @@ public static class EventHandler
     {
         InstantiateItemInScene?.Invoke(ID, pos);
     }
+
+    public static event Action<int, Vector3> DropItemEvent;
+    public static void CallDropItemEvent(int ID, Vector3 pos) => DropItemEvent?.Invoke(ID, pos);
 
     public static event Action<int> GameHourEvent;
     public static void CallGameHourEvent(int hour)
@@ -58,4 +61,10 @@ public static class EventHandler
     public static event Action<Vector3> MoveToPositionEvent;
     public static void CallMoveToPositionEvent(Vector3 pos) => MoveToPositionEvent?.Invoke(pos);
 
+    public static event Action<Vector3, ItemDetails> MouseClickEvent;
+    public static void CallMouseClickEvent(Vector3 pos, ItemDetails itemDetails) 
+        => MouseClickEvent?.Invoke(pos, itemDetails);
+    public static event Action<Vector3, ItemDetails> ExecuteActionAfterAnimation;
+    public static void CallExecuteActionAfterAnimation(Vector3 pos, ItemDetails itemDetails) 
+        => ExecuteActionAfterAnimation?.Invoke(pos, itemDetails);
 }

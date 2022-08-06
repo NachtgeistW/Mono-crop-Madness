@@ -21,14 +21,21 @@ namespace Inventory
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            inventoryUI.itemTooltip.gameObject.SetActive(true);
-            inventoryUI.itemTooltip.SetupTooltip(slotUI.itemDetails);
+            if (slotUI.itemDetails != null)
+            {
+                inventoryUI.itemTooltip.gameObject.SetActive(true);
+                inventoryUI.itemTooltip.SetupTooltip(slotUI.itemDetails);
 
-            //Force rebuild the layout of the tooltip
-            LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<RectTransform>());
+                //Force rebuild the layout of the tooltip
+                LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<RectTransform>());
 
-            //Set its position
-            inventoryUI.itemTooltip.transform.position = transform.position + offset;
+                //Set its position
+                inventoryUI.itemTooltip.transform.position = transform.position + offset;
+            }
+            else
+            {
+                inventoryUI.itemTooltip.gameObject.SetActive(false);
+            }
         }
 /*        public void OnPointerMove(PointerEventData eventData)
         {

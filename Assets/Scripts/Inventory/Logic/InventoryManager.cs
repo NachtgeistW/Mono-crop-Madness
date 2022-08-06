@@ -12,9 +12,19 @@ namespace Inventory
         [Header("Bag Data")]
         public InventoryBag_SO PlayerBag;   // infomation of player's bag
 
+        private void OnEnable()
+        {
+            EventHandler.DropItemEvent += OnDropItemEvent;
+        }
+
+        private void OnDisable()
+        {
+            EventHandler.DropItemEvent -= OnDropItemEvent;
+        }
+
         private void Start()
         {
-            EventHandler.CallOnUpdateInventoryUI(PlayerBag.itemList);
+            EventHandler.CallUpdateInventoryUI(PlayerBag.itemList);
         }
 
         /// <summary>
@@ -41,7 +51,7 @@ namespace Inventory
             Debug.Log(GetItemDetails(item.itemID).name);
             
             //Update UI by calling the action
-            EventHandler.CallOnUpdateInventoryUI(PlayerBag.itemList);
+            EventHandler.CallUpdateInventoryUI(PlayerBag.itemList);
         }
 
         /// <summary>
@@ -88,5 +98,35 @@ namespace Inventory
                 PlayerBag.itemList[index] = item;
             }
         }
+
+        /// <summary>
+        /// Remove a specified number of bag item
+        /// </summary>
+        /// <param name="ID">item ID</param>
+        /// <param name="removeAmount">item amount to be removed</param>
+        private void RemoveItem(int ID, int removeAmount)
+        {
+            var index = GetItemIndexInBag(ID);
+            var curItemAmount = PlayerBag.itemList[index].itemAmount;
+            if (curItemAmount > removeAmount)
+            {
+                var newAmount = curItemAmount - removeAmount;
+                var item = new InventoryItem { itemID = ID, itemAmount = newAmount };
+                PlayerBag.itemList[index] = item;
+            }
+            else if (curItemAmount == removeAmount)
+            {
+                var item = new InventoryItem();
+                PlayerBag.itemList[index] = item;
+            }
+            EventHandler.CallUpdateInventoryUI(PlayerBag.itemList);
+        }
+
+        private void OnDropItemEvent(int ID, Vector3 pos)
+        {
+            RemoveItem(ID, 1);
+        }
+
+
     }
 }

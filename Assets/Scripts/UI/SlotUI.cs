@@ -25,7 +25,7 @@ namespace Inventory
         public void Start()
         {
             isSelected = false;
-            if(itemDetails.itemID == 0)
+            if(itemDetails == null)
                 UpdateEmptySlot();
         }
 
@@ -51,7 +51,10 @@ namespace Inventory
             if (isSelected)
             { 
                 isSelected = false;
+                inventoryUI.UpdateSlotHightLight(-1);
+                EventHandler.CallItemSelectEvent(itemDetails, isSelected);
             }
+            itemDetails = null;
             amountText.text = string.Empty;
             slotImage.enabled = false;
             button.interactable = false;
@@ -59,7 +62,7 @@ namespace Inventory
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (itemAmount == 0) return;
+            if (itemDetails == null) return;
             isSelected = !isSelected;
             inventoryUI.UpdateSlotHightLight(slotIndex);
             EventHandler.CallItemSelectEvent(itemDetails, isSelected);

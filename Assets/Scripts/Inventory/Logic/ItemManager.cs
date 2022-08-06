@@ -8,16 +8,20 @@ namespace Inventory
     {
         public Item itemPrefab;
         private Transform itemParent;
+        public Item bounceItemPrefab;
+        private Transform playerTransform => FindObjectOfType<Player>().transform;
 
         private void OnEnable()
         {
             EventHandler.InstantiateItemInScene += OnInstantiateItemInScene;
+            EventHandler.DropItemEvent += OnDropItemEvent;
             EventHandler.AfterSceneLoadedEvent += OnAfterSceneLoadedEvent;
         }
 
         private void OnDisable()
         {
             EventHandler.InstantiateItemInScene -= OnInstantiateItemInScene;
+            EventHandler.DropItemEvent -= OnDropItemEvent;
             EventHandler.AfterSceneLoadedEvent -= OnAfterSceneLoadedEvent;
         }
 
@@ -30,6 +34,14 @@ namespace Inventory
         {
             var item = Instantiate(itemPrefab, pos, Quaternion.identity, itemParent);
             item.itemID = ID;
+        }
+
+        private void OnDropItemEvent(int ID, Vector3 mousePos)
+        {
+            var item = Instantiate(bounceItemPrefab, playerTransform.position, Quaternion.identity, itemParent);
+            item.itemID = ID;
+            var dir = (mousePos - playerTransform.position).normalized;
+            item.GetComponent<ItemBounce>().InitBounceItem(mousePos, dir);
         }
     }
 }
