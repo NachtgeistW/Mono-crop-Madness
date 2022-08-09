@@ -35,7 +35,7 @@ public class TileProperty
 public class TileDetails
 {
     public Vector2Int coord;
-    public bool canPlant;
+    public bool canPlant;   //This equals to canDropItem
     public bool isNPCObstacle;
     public int daySincePlanted = -1;
     public int seedID = -1;

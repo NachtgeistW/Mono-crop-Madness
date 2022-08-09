@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Tilemaps;
 
 namespace Map
 {
@@ -17,17 +18,20 @@ namespace Map
 
         [Header("Plant Tilemaps")]
         public RuleTile plantTile;
+        private Tilemap plantTilemap;
 
         private void OnEnable()
         {
             EventHandler.ExecuteActionAfterAnimation += OnExecuteActionAfterAnimation;
             EventHandler.AfterSceneLoadedEvent += OnAfterSceneLoadedEvent;
+            EventHandler.GameDayEvent += OnGameDayEvent;
         }
 
         private void OnDisable()
         {
             EventHandler.ExecuteActionAfterAnimation -= OnExecuteActionAfterAnimation;
             EventHandler.AfterSceneLoadedEvent += OnAfterSceneLoadedEvent;
+            EventHandler.GameDayEvent -= OnGameDayEvent;
         }
 
         private void Start()
@@ -96,6 +100,24 @@ namespace Map
         private void OnAfterSceneLoadedEvent()
         {
             curGrid = FindObjectOfType<Grid>();
+            plantTilemap = GameObject.FindWithTag("Dig").GetComponent<Tilemap>();
+
+            RefreshMap();
+        }
+
+        /// <summary>
+        /// Execute everyday
+        /// </summary>
+        /// <param name="day"></param>
+        private void OnGameDayEvent(int day)
+        {
+            foreach (var tile in tileDetailsDict)
+            {
+                if (tile.Value.daySincePlanted > -1)
+                {
+                    tile.Value.daySincePlanted++;
+                }
+            }
         }
 
         /// <summary>
@@ -110,20 +132,76 @@ namespace Map
 
             if (curTile != null)
             {
-                //TODO
                 switch (itemDetails.itemType)
                 {
+                    //TODO: workflow about using item
                     case ItemType.Grass:
                     case ItemType.Bush:
                     case ItemType.Tree:
                         EventHandler.CallDropItemEvent(itemDetails.itemID, mouseWorldPos);
+                        SetPlantableGround(curTile);
+                        curTile.daySincePlanted = 0;
+                        curTile.canPlant = false;
                         break;
                     default:
                         break;
                 }
+                //update map
+                UpdateTileDetails(curTile);
             }
         }
 
+        /// <summary>
+        /// Show dug tilemap
+        /// </summary>
+        /// <param name="tile"></param>
+        private void SetPlantableGround(TileDetails tile)
+        {
+            Vector3Int pos = new Vector3Int(tile.coord.x, tile.coord.y, 0);
+            if (plantTilemap != null)
+            {
+                plantTilemap.SetTile(pos, plantTile);
+            }
+        }
         
+        private void UpdateTileDetails(TileDetails tileDetails)
+        {
+            string key = tileDetails.coord.ToString() + SceneManager.GetActiveScene().name;
+            if(tileDetailsDict.ContainsKey(key))
+            {
+                tileDetailsDict[key] = tileDetails;
+            }
+        }
+
+        /// <summary>
+        /// Refresh tile on map
+        /// </summary>
+        private void RefreshMap()
+        {
+            if (plantTilemap != null)
+                plantTilemap.ClearAllTiles();
+
+            DisplayMapInfo(SceneManager.GetActiveScene().name);
+        }
+
+        /// <summary>
+        /// Show tile on map
+        /// </summary>
+        /// <param name="sceneName">scene map</param>
+        private void DisplayMapInfo(string sceneName)
+        {
+            foreach(var tile in tileDetailsDict)
+            {
+                var key = tile.Key;
+                var tileDetails = tile.Value;
+
+                if (key.Contains(sceneName))
+                {
+                    if (tileDetails.daySincePlanted > -1)
+                        SetPlantableGround(tileDetails);
+                    //TODO: seed
+                }
+            }
+        }
     }
 }

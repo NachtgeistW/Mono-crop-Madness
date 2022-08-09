@@ -34,12 +34,12 @@ public class TimeUI : MonoBehaviour
 
     private void OnEnable()
     {
-        EventHandler.GameDayEvent += OnGameDayEvent;
+        EventHandler.GameDateEvent += OnGameDayEvent;
     }
 
     private void OnDisable()
     {
-        EventHandler.GameDayEvent -= OnGameDayEvent;
+        EventHandler.GameDateEvent -= OnGameDayEvent;
     }
 
     private void OnGameDayEvent(int hour, int day, int month, int year)

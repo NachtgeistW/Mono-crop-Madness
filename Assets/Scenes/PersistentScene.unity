@@ -1039,7 +1039,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapDataList:
   - {fileID: 11400000, guid: 3d5dba1a9f9f7174cab29e7761c865ca, type: 2}
-  plantTile: {fileID: 0}
+  plantTile: {fileID: 11400000, guid: cb3ae2798f9edb74cb1deb2351167dbd, type: 2}
 --- !u!1 &1244889639
 GameObject:
   m_ObjectHideFlags: 3

@@ -28,11 +28,14 @@ public static class EventHandler
         GameHourEvent?.Invoke(hour);
     }
 
-    public static event Action<int, int, int, int> GameDayEvent;
-    public static void CallGameDayEvent(int hour, int day, int month, int year)
+    public static event Action<int, int, int, int> GameDateEvent;
+    public static void CallGameDateEvent(int hour, int day, int month, int year)
     {
-        GameDayEvent?.Invoke(hour, day, month, year);
+        GameDateEvent?.Invoke(hour, day, month, year);
     }
+
+    public static event Action<int> GameDayEvent;
+    public static void CallGameDayEvent(int day) => GameDayEvent?.Invoke(day);
 
     public static event Action<ItemDetails, bool> ItemSelectEvent;
     public static void CallItemSelectEvent(ItemDetails itemDetail, bool isSelected)
@@ -62,9 +65,9 @@ public static class EventHandler
     public static void CallMoveToPositionEvent(Vector3 pos) => MoveToPositionEvent?.Invoke(pos);
 
     public static event Action<Vector3, ItemDetails> MouseClickEvent;
-    public static void CallMouseClickEvent(Vector3 pos, ItemDetails itemDetails) 
+    public static void CallMouseClickEvent(Vector3 pos, ItemDetails itemDetails)
         => MouseClickEvent?.Invoke(pos, itemDetails);
     public static event Action<Vector3, ItemDetails> ExecuteActionAfterAnimation;
-    public static void CallExecuteActionAfterAnimation(Vector3 pos, ItemDetails itemDetails) 
+    public static void CallExecuteActionAfterAnimation(Vector3 pos, ItemDetails itemDetails)
         => ExecuteActionAfterAnimation?.Invoke(pos, itemDetails);
 }

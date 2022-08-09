@@ -147,6 +147,7 @@ public class CursorManager : MonoBehaviour
 
         //Judge plantable
         TileDetails curTile = GridMapManager.Instance.GetTileDetailsOnMousePosition(mouseGridPos);
+        
         if (curTile != null)
         {
             switch (curItem.itemType)

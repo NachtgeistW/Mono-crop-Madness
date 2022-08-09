@@ -16,7 +16,7 @@ public class TimeManager : MonoBehaviour
 
     private void Start()
     {
-        EventHandler.CallGameDayEvent(gameHour, gameDay, gameMonth, gameYear);
+        EventHandler.CallGameDateEvent(gameHour, gameDay, gameMonth, gameYear);
     }
 
     void Update()
@@ -29,7 +29,12 @@ public class TimeManager : MonoBehaviour
                 tikTime -= Settings.hourThreshold;
                 UpdateGameTime();
             }
-
+        }
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            gameDay++;
+            EventHandler.CallGameDayEvent(gameDay);
+            EventHandler.CallGameDateEvent(gameHour, gameDay, gameMonth, gameYear);
         }
     }
 
@@ -58,8 +63,10 @@ public class TimeManager : MonoBehaviour
                     gameYear++;
                 }
             }
+            //Refresh map and plants
+            EventHandler.CallGameDayEvent(gameDay);
         }
-        EventHandler.CallGameDayEvent(gameHour, gameDay, gameMonth, gameYear);
+        EventHandler.CallGameDateEvent(gameHour, gameDay, gameMonth, gameYear);
     }
 }
 
