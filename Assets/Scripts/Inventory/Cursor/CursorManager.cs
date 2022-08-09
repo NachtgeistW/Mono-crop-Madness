@@ -152,6 +152,7 @@ public class CursorManager : MonoBehaviour
         {
             switch (curItem.itemType)
             {
+                //TODO: 所有物品类型的判断
                 case ItemType.Grass:
                 case ItemType.Bush:
                 case ItemType.Tree:

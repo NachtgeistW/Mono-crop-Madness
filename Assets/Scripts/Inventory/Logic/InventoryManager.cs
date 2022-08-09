@@ -122,11 +122,9 @@ namespace Inventory
             EventHandler.CallUpdateInventoryUI(PlayerBag.itemList);
         }
 
-        private void OnDropItemEvent(int ID, Vector3 pos)
+        private void OnDropItemEvent(int ID, Vector3 pos, ItemType itemType)
         {
             RemoveItem(ID, 1);
         }
-
-
     }
 }

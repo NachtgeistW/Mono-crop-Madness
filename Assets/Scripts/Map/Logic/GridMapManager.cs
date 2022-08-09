@@ -30,7 +30,7 @@ namespace Map
         private void OnDisable()
         {
             EventHandler.ExecuteActionAfterAnimation -= OnExecuteActionAfterAnimation;
-            EventHandler.AfterSceneLoadedEvent += OnAfterSceneLoadedEvent;
+            EventHandler.AfterSceneLoadedEvent -= OnAfterSceneLoadedEvent;
             EventHandler.GameDayEvent -= OnGameDayEvent;
         }
 
@@ -117,7 +117,12 @@ namespace Map
                 {
                     tile.Value.daySincePlanted++;
                 }
+                if (tile.Value.seedID != -1)
+                {
+                    tile.Value.growthDays++;
+                }
             }
+            RefreshMap();
         }
 
         /// <summary>
@@ -138,7 +143,8 @@ namespace Map
                     case ItemType.Grass:
                     case ItemType.Bush:
                     case ItemType.Tree:
-                        EventHandler.CallDropItemEvent(itemDetails.itemID, mouseWorldPos);
+                        EventHandler.CallDropItemEvent(itemDetails.itemID, mouseWorldPos, itemDetails.itemType);
+                        EventHandler.CallPlantSeedEvent(itemDetails.itemID, curTile);
                         SetPlantableGround(curTile);
                         curTile.daySincePlanted = 0;
                         curTile.canPlant = false;
@@ -181,6 +187,11 @@ namespace Map
             if (plantTilemap != null)
                 plantTilemap.ClearAllTiles();
 
+            foreach (var crop in FindObjectsOfType<Crop>())
+            {
+                Destroy(crop.gameObject);
+            }
+
             DisplayMapInfo(SceneManager.GetActiveScene().name);
         }
 
@@ -199,7 +210,8 @@ namespace Map
                 {
                     if (tileDetails.daySincePlanted > -1)
                         SetPlantableGround(tileDetails);
-                    //TODO: seed
+                    if (tileDetails.seedID > -1)
+                        EventHandler.CallPlantSeedEvent(tileDetails.seedID, tileDetails);
                 }
             }
         }

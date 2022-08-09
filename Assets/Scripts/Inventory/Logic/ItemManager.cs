@@ -36,8 +36,12 @@ namespace Inventory
             item.itemID = ID;
         }
 
-        private void OnDropItemEvent(int ID, Vector3 mousePos)
+        private void OnDropItemEvent(int ID, Vector3 mousePos, ItemType itemType)
         {
+            //TODO: 把这个扔东西的动作加回来，但不在地上生成实例
+            if (itemType == ItemType.Grass || itemType == ItemType.Bush || itemType == ItemType.Tree)
+                return;
+
             var item = Instantiate(bounceItemPrefab, playerTransform.position, Quaternion.identity, itemParent);
             item.itemID = ID;
             var dir = (mousePos - playerTransform.position).normalized;

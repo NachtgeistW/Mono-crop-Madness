@@ -39,5 +39,5 @@ public class TileDetails
     public bool isNPCObstacle;
     public int daySincePlanted = -1;
     public int seedID = -1;
-    public int grothDays = -1;
+    public int growthDays = -1;
 }
