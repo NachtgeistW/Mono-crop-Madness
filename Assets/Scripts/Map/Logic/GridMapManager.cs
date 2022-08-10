@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -25,6 +25,7 @@ namespace Map
             EventHandler.ExecuteActionAfterAnimation += OnExecuteActionAfterAnimation;
             EventHandler.AfterSceneLoadedEvent += OnAfterSceneLoadedEvent;
             EventHandler.GameDayEvent += OnGameDayEvent;
+            EventHandler.CropFullyGrowthEvent += OnCropFullyGrowthEvent;
         }
 
         private void OnDisable()
@@ -32,6 +33,7 @@ namespace Map
             EventHandler.ExecuteActionAfterAnimation -= OnExecuteActionAfterAnimation;
             EventHandler.AfterSceneLoadedEvent -= OnAfterSceneLoadedEvent;
             EventHandler.GameDayEvent -= OnGameDayEvent;
+            EventHandler.CropFullyGrowthEvent -= OnCropFullyGrowthEvent;
         }
 
         private void Start()
@@ -50,7 +52,7 @@ namespace Map
                 {
                     coord = new Vector2Int(tileProperty.tileCoordinate.x, tileProperty.tileCoordinate.y)
                 };
-                
+
                 //Set the tile details data
                 string key = tileDetails.coord.ToString() + mapData.sceneName;
                 if (GetTileDetails(key) != null)
@@ -61,9 +63,6 @@ namespace Map
                 {
                     case GridType.Plantable:
                         tileDetails.canPlant = true;
-                        break;
-                    case GridType.NPCObstacle:
-                        tileDetails.isNPCObstacle = true;
                         break;
                     default:
                         break;
@@ -157,6 +156,14 @@ namespace Map
             }
         }
 
+        private void OnCropFullyGrowthEvent(int seedID, TileDetails tile)
+        {
+            /*var item = Inventory.InventoryManager.Instance.GetItemDetails(seedID);
+            UpdateEffectArea(item.itemType, tile);
+            RefreshMap();*/
+            tile.isCropOnTileFullyGrown = true;
+        }
+
         /// <summary>
         /// Show dug tilemap
         /// </summary>
@@ -169,11 +176,79 @@ namespace Map
                 plantTilemap.SetTile(pos, plantTile);
             }
         }
-        
+
+        /// <summary>
+        /// Update tile details effected by fully growth plant
+        /// </summary>
+        /// <param name="itemtype">item type of the plant</param>
+        /// <param name="tile">tile planted the plant</param>
+        private void UpdateEffectArea(ItemType itemtype, TileDetails tile)
+        {
+            if (itemtype == ItemType.Grass)
+                return;
+
+            //Bush and Tree  
+            var leftTile = GetTileDetails(new Vector2Int(tile.coord.x - 1, tile.coord.y).ToString() + SceneManager.GetActiveScene().name);
+            var rightTile = GetTileDetails(new Vector2Int(tile.coord.x + 1, tile.coord.y).ToString() + SceneManager.GetActiveScene().name);
+            var upTile = GetTileDetails(new Vector2Int(tile.coord.x, tile.coord.y + 1).ToString() + SceneManager.GetActiveScene().name);
+            var downTile = GetTileDetails(new Vector2Int(tile.coord.x, tile.coord.y - 1).ToString() + SceneManager.GetActiveScene().name);
+
+            if (leftTile != null)
+            {
+                leftTile.isEffected = true;
+                UpdateTileDetails(leftTile);
+            }
+            if (rightTile != null)
+            {
+                rightTile.isEffected = true;
+                UpdateTileDetails(rightTile);
+            }
+            if (upTile != null)
+            {
+                upTile.isEffected = true;
+                UpdateTileDetails(upTile);
+            }
+            if (downTile != null)
+            {
+                downTile.isEffected = true;
+                UpdateTileDetails(downTile);
+            }
+
+            //Bush effect area ended
+            if (itemtype == ItemType.Bush)
+                return;
+
+            //Tree
+            var leftUpTile = GetTileDetails(new Vector2Int(tile.coord.x - 1, tile.coord.y + 1).ToString() + SceneManager.GetActiveScene().name);
+            var rightUpTile = GetTileDetails(new Vector2Int(tile.coord.x + 1, tile.coord.y + 1).ToString() + SceneManager.GetActiveScene().name);
+            var leftDownTile = GetTileDetails(new Vector2Int(tile.coord.x - 1, tile.coord.y - 1).ToString() + SceneManager.GetActiveScene().name);
+            var rightDownTile = GetTileDetails(new Vector2Int(tile.coord.x + 1, tile.coord.y - 1).ToString() + SceneManager.GetActiveScene().name);
+            if (leftUpTile != null)
+            {
+                leftUpTile.isEffected = true;
+                UpdateTileDetails(leftUpTile);
+            }
+            if (rightUpTile != null)
+            {
+                rightUpTile.isEffected = true;
+                UpdateTileDetails(rightUpTile);
+            }
+            if (leftDownTile != null)
+            {
+                leftDownTile.isEffected = true;
+                UpdateTileDetails(leftDownTile);
+            }
+            if (rightDownTile != null)
+            {
+                rightDownTile.isEffected = true;
+                UpdateTileDetails(rightDownTile);
+            }
+        }
+
         private void UpdateTileDetails(TileDetails tileDetails)
         {
             string key = tileDetails.coord.ToString() + SceneManager.GetActiveScene().name;
-            if(tileDetailsDict.ContainsKey(key))
+            if (tileDetailsDict.ContainsKey(key))
             {
                 tileDetailsDict[key] = tileDetails;
             }
@@ -201,7 +276,7 @@ namespace Map
         /// <param name="sceneName">scene map</param>
         private void DisplayMapInfo(string sceneName)
         {
-            foreach(var tile in tileDetailsDict)
+            foreach (var tile in tileDetailsDict)
             {
                 var key = tile.Key;
                 var tileDetails = tile.Value;
@@ -214,6 +289,47 @@ namespace Map
                         EventHandler.CallPlantSeedEvent(tileDetails.seedID, tileDetails);
                 }
             }
+        }
+
+        /// <summary>
+        /// 返回场景中的植物数量
+        /// </summary>
+        /// <param name="sceneName"></param>
+        /// <returns></returns>
+        public Dictionary<ItemType, int> GetFullyGrowthPlantAmountOnScene(string sceneName)
+        {
+            int grassAmount = 0;
+            int bushAmount = 0;
+            int treeAmount = 0;
+            foreach (var tile in tileDetailsDict)
+            {
+                var key = tile.Key;
+                var tileDetails = tile.Value;
+                if (key.Contains(sceneName) && tileDetails.seedID > -1 && tileDetails.isCropOnTileFullyGrown)
+                {
+                    var itemType = Inventory.InventoryManager.Instance.GetItemDetails(tileDetails.seedID).itemType;
+                    switch (itemType)
+                    {
+                        case ItemType.Grass:
+                            grassAmount++;
+                            break;
+                        case ItemType.Bush:
+                            bushAmount++;
+                            break;
+                        case ItemType.Tree:
+                            treeAmount++;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            return new Dictionary<ItemType, int> 
+            { 
+                {ItemType.Grass, grassAmount }, 
+                {ItemType.Bush, bushAmount}, 
+                {ItemType.Tree, treeAmount } 
+            };
         }
     }
 }

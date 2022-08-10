@@ -73,4 +73,7 @@ public static class EventHandler
 
     public static event Action<int, TileDetails> PlantSeedEvent;
     public static void CallPlantSeedEvent(int seedID, TileDetails tile) => PlantSeedEvent?.Invoke(seedID, tile);
+
+    public static event Action<int, TileDetails> CropFullyGrowthEvent;
+    public static void CallCropFullyGrowthEvent(int seedID, TileDetails tile) => CropFullyGrowthEvent?.Invoke(seedID, tile);
 }

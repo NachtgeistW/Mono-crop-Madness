@@ -38,7 +38,7 @@ namespace Inventory
 
         private void OnDropItemEvent(int ID, Vector3 mousePos, ItemType itemType)
         {
-            //TODO: 把这个扔东西的动作加回来，但不在地上生成实例
+            //TODO: 鎶婅繖涓墧涓滆タ鐨勫姩浣滃姞鍥炴潵锛屼絾涓嶅湪鍦颁笂鐢熸垚瀹炰緥
             if (itemType == ItemType.Grass || itemType == ItemType.Bush || itemType == ItemType.Tree)
                 return;
 

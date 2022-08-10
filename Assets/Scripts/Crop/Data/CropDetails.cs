@@ -6,7 +6,7 @@ using UnityEngine;
 public class CropDetails
 {
     public int seedItemID;
-    [Header("²»Í¬½×¶ÎĞèÒªµÄÌìÊı")]
+    [Header("ä¸åŒé˜¶æ®µéœ€è¦çš„å¤©æ•°")]
     public int[] growthDays;
     public int TotalGrowthDays
     {
@@ -20,9 +20,9 @@ public class CropDetails
             return amount;
         }
     }
-    [Header("²»Í¬½×¶ÎµÄprefab")]
+    [Header("ä¸åŒé˜¶æ®µçš„prefab")]
     public GameObject[] growthPrefabs;
-    [Header("²»Í¬½×¶ÎµÄÍ¼Æ¬")]
+    [Header("ä¸åŒé˜¶æ®µçš„å›¾ç‰‡")]
     public Sprite[] growthSprites;
 
     [Header("Option")]

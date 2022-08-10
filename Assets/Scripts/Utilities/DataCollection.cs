@@ -36,7 +36,8 @@ public class TileDetails
 {
     public Vector2Int coord;
     public bool canPlant;   //This equals to canDropItem
-    public bool isNPCObstacle;
+    public bool isEffected;
+    public bool isCropOnTileFullyGrown;
     public int daySincePlanted = -1;
     public int seedID = -1;
     public int growthDays = -1;

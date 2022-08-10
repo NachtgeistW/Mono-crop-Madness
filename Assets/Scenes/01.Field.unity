@@ -285,6 +285,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tree Green (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 669790754493732790, guid: b29735050b381f344a80bd0d8f099c3b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 669790754493732791, guid: b29735050b381f344a80bd0d8f099c3b, type: 3}
       propertyPath: m_RootOrder
       value: 3

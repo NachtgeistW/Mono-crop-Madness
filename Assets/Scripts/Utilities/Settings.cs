@@ -11,4 +11,10 @@ public class Settings
 
     //Transition
     public const float sceneFadeDuration = 1;
+
+    //Healthy Score
+    public const int GrassRecoveryScore = 1;
+    public const int BushRecoveryScore = 2;
+    public const int TreeRecoveryScore = 3;
+    public const int DailyReduceScore = 2;
 }

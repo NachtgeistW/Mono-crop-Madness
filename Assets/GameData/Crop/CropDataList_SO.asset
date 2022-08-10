@@ -30,6 +30,18 @@ MonoBehaviour:
     - {fileID: 3360056448976987245, guid: 869813521fdd3a44f960967a909cc5b3, type: 3}
     growthSprites:
     - {fileID: -171679066, guid: 0f8fa26bd67a74039b2bfcc93554e8a2, type: 3}
-    - {fileID: 21300000, guid: 5f33572e0e10744c1880f988964682e4, type: 3}
+    - {fileID: 21300000, guid: 3eb9fddd25b8548139877c93ed12a178, type: 3}
+    hasAnimation: 0
+    hasParticalEffect: 0
+  - seedItemID: 1003
+    growthDays: 020000000300000003000000
+    growthPrefabs:
+    - {fileID: 3360056448976987245, guid: 869813521fdd3a44f960967a909cc5b3, type: 3}
+    - {fileID: 3360056448976987245, guid: 869813521fdd3a44f960967a909cc5b3, type: 3}
+    - {fileID: 3360056448976987245, guid: 869813521fdd3a44f960967a909cc5b3, type: 3}
+    growthSprites:
+    - {fileID: 21300000, guid: b344f2cee7ac54d7ab52e493a1bb4ee7, type: 3}
+    - {fileID: 21300000, guid: c54002cd9727a43329d7f75c50778b57, type: 3}
+    - {fileID: 21300000, guid: 4590cd3fefdd74b22ae749a122189ece, type: 3}
     hasAnimation: 0
     hasParticalEffect: 0

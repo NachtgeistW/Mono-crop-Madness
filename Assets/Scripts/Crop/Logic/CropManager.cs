@@ -37,13 +37,13 @@ namespace CropPlant
             {
                 tileDetails.seedID = seedID;
                 tileDetails.growthDays = 0;
-                //ÏÔÊ¾Å©×÷Îï
+                //æ˜¾ç¤ºå†œä½œç‰©
                 DisplayCropPlant(tileDetails, curCrop);
             }
             //refresh map
             else if (tileDetails.seedID != -1)
             {
-                //ÏÔÊ¾Å©×÷Îï
+                //æ˜¾ç¤ºå†œä½œç‰©
                 DisplayCropPlant(tileDetails, curCrop);
             }
         }
@@ -60,13 +60,15 @@ namespace CropPlant
             int curStage = 0;
             int dayCounter = cropDetails.TotalGrowthDays;
 
-            //µ¹Ðò¼ÆËãµ±Ç°µÄ³É³¤½×¶Î
+            //å€’åºè®¡ç®—å½“å‰çš„æˆé•¿é˜¶æ®µ
             for (int i = growthStages -1; i >= 0; i--)
             {
                 //last stage
                 if (tileDetails.growthDays >= dayCounter)
                 {
                     curStage = i;
+                    //TODO: fix the bug
+                    EventHandler.CallCropFullyGrowthEvent(cropDetails.seedItemID, tileDetails);
                     break;
                 }
                 dayCounter -= cropDetails.growthDays[i];
