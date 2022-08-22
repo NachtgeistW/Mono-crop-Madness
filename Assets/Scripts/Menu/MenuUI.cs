@@ -6,6 +6,25 @@ public class MenuUI : MonoBehaviour
 {
     public GameObject[] panels;
     public GameObject menuPanel;
+    public GameObject endPanel;
+    public GameObject endSucceedPanel;
+    public GameObject endFailedPanel;
+
+    private void OnEnable()
+    {
+        EventHandler.GameEndEvent += OnGameEndEvent;
+    }
+
+    private void OnDisable()
+    {
+        EventHandler.GameEndEvent -= OnGameEndEvent;
+    }
+
+    private void Start() 
+    {
+        EventHandler.CallGamePauseEvent();
+        endPanel.SetActive(false);
+    }
 
     public void SwitchPanel(int index)
     {
@@ -28,5 +47,21 @@ public class MenuUI : MonoBehaviour
     public void StartGame()
     {
         menuPanel.SetActive(false);
+        EventHandler.CallGameResumeEvent();
+    }
+
+    public void OnGameEndEvent(bool isGameClear)
+    {
+        endPanel.SetActive(true);
+        if (isGameClear)
+        {
+            endSucceedPanel.SetActive(true);
+            endFailedPanel.SetActive(false);
+        }
+        else
+        {
+            endFailedPanel.SetActive(true);
+            endSucceedPanel.SetActive(false);
+        }
     }
 }

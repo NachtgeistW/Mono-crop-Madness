@@ -76,4 +76,13 @@ public static class EventHandler
 
     public static event Action<int, TileDetails> CropFullyGrowthEvent;
     public static void CallCropFullyGrowthEvent(int seedID, TileDetails tile) => CropFullyGrowthEvent?.Invoke(seedID, tile);
+
+    public static event Action GamePauseEvent;
+    public static void CallGamePauseEvent() => GamePauseEvent?.Invoke();
+
+    public static event Action GameResumeEvent;
+    public static void CallGameResumeEvent() => GameResumeEvent?.Invoke();
+
+    public static event Action<bool> GameEndEvent;
+    public static void CallGameEndEvent(bool isGameClear) => GameEndEvent?.Invoke(isGameClear);
 }

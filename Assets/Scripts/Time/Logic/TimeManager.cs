@@ -9,6 +9,18 @@ public class TimeManager : MonoBehaviour
     public bool gameClockPause;
     private float tikTime;
 
+    private void OnEnable() 
+    {
+        EventHandler.GamePauseEvent += GamePauseEvent;
+        EventHandler.GameResumeEvent += GameResumeEvent;
+    }
+
+    private void OnDisable() 
+    {
+        EventHandler.GamePauseEvent -= GamePauseEvent;
+        EventHandler.GameResumeEvent -= GameResumeEvent;
+    }
+
     void Awake()
     {
         InitGameTime();
@@ -30,12 +42,12 @@ public class TimeManager : MonoBehaviour
                 UpdateGameTime();
             }
         }
-        if (Input.GetKeyDown(KeyCode.G))
+        /*if (!gameClockPause && Input.GetKeyDown(KeyCode.G))
         {
             gameDay++;
             EventHandler.CallGameDayEvent(gameDay);
             EventHandler.CallGameDateEvent(gameHour, gameDay, gameMonth, gameYear);
-        }
+        }*/
     }
 
     private void InitGameTime()
@@ -67,6 +79,16 @@ public class TimeManager : MonoBehaviour
             EventHandler.CallGameDayEvent(gameDay);
         }
         EventHandler.CallGameDateEvent(gameHour, gameDay, gameMonth, gameYear);
+    }
+
+    private void GamePauseEvent()
+    {
+        gameClockPause = true;
+    }
+    
+    private void GameResumeEvent()
+    {
+        gameClockPause = false;
     }
 }
 

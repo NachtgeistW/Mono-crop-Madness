@@ -25,7 +25,15 @@ public class HealthyScoreManager : Singleton<HealthyScoreManager>
     private void Update()
     {
         if (HealthyScore >= 100)
-            Debug.Log("Succeed!");
+        {
+            EventHandler.CallGameEndEvent(true);
+            Debug.Log("Succeed");
+        }
+        if (HealthyScore <= 0)
+        {
+            EventHandler.CallGameEndEvent(false);
+            Debug.Log("Failed");
+        }
     }
 
     /// <summary>

@@ -4,10 +4,10 @@ public class Settings
     public const float fadeAlpha = 0.35f;
 
     //Time
-    public const float hourThreshold = 2f; //Smaller the threshold, faster the time
+    public const float hourThreshold = 0.5f; //Smaller the threshold, faster the time
     public const int hourHold = 23; //critical value
-    public const int dayHold = 10; //ÔİÊ±ÉèÎª10ÌìÎª1¸öÔÂ
-    public const int monthHold = 6; //ÔİÊ±ÉèÎª6¸öÔÂÎª1Äê
+    public const int dayHold = 10; //æš‚æ—¶è®¾ä¸º10å¤©ä¸º1ä¸ªæœˆ
+    public const int monthHold = 12; //æš‚æ—¶è®¾ä¸º12ä¸ªæœˆä¸º1å¹´
 
     //Transition
     public const float sceneFadeDuration = 1;
@@ -16,5 +16,5 @@ public class Settings
     public const int GrassRecoveryScore = 1;
     public const int BushRecoveryScore = 2;
     public const int TreeRecoveryScore = 3;
-    public const int DailyReduceScore = 2;
+    public const int DailyReduceScore = 5;
 }
